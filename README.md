@@ -73,13 +73,15 @@ Copiar las variables:
 Copy-Item .env.example .env
 ```
 
-Ejemplo con autenticación integrada:
+Ejemplo para el contenedor Docker:
 
 ```env
-sql_server=localhost\SQLEXPRESS
+sql_server=localhost,1433
 sql_database=poc_bot_facturas
+sql_username=sa
+sql_password=SqlServer2026*
 sql_driver=SQL Server
-sql_trusted_connection=true
+sql_trusted_connection=false
 sql_trust_server_certificate=true
 ```
 
