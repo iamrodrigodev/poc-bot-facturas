@@ -1,10 +1,14 @@
 import smtplib
+import ssl
 from email.message import EmailMessage
 
 from app.config.ajustes import ajustes
 
 
 def enviar_xmls(destinatario, nombre_cliente, rutas_xml):
+    if not ajustes.smtp_username or not ajustes.smtp_password:
+        raise ValueError("Las credenciales SMTP no están configuradas")
+
     mensaje = EmailMessage()
     mensaje["From"] = ajustes.smtp_username
     mensaje["To"] = destinatario
@@ -22,7 +26,7 @@ def enviar_xmls(destinatario, nombre_cliente, rutas_xml):
             filename=ruta_xml.name,
         )
 
-    with smtplib.SMTP(ajustes.smtp_server, ajustes.smtp_port) as servidor:
-        servidor.starttls()
+    with smtplib.SMTP(ajustes.smtp_server, ajustes.smtp_port, timeout=60) as servidor:
+        servidor.starttls(context=ssl.create_default_context())
         servidor.login(ajustes.smtp_username, ajustes.smtp_password)
         servidor.send_message(mensaje)

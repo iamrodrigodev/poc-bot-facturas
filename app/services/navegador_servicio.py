@@ -11,4 +11,6 @@ def crear_navegador():
         opciones.add_argument("--headless=new")
 
     opciones.add_argument("--start-maximized")
-    return webdriver.Chrome(options=opciones)
+    navegador = webdriver.Chrome(options=opciones)
+    navegador.set_page_load_timeout(60)
+    return navegador
