@@ -9,22 +9,22 @@ class EnvioBitacoraRepositorio:
         self.sesion = sesion
 
     def listar_ids_enviados(self, cliente_id):
-        sentencia = select(EnvioBitacora.archivo_bitacora_id).where(
+        sentencia = select(EnvioBitacora.xml_id).where(
             EnvioBitacora.cliente_id == cliente_id,
             EnvioBitacora.envio_bitacora_estado == "enviado",
         )
         return set(self.sesion.scalars(sentencia))
 
-    def registrar_envio(self, archivo_bitacora_id, cliente_id):
+    def registrar_envio(self, xml_id, cliente_id):
         sentencia = select(EnvioBitacora).where(
-            EnvioBitacora.archivo_bitacora_id == archivo_bitacora_id,
+            EnvioBitacora.xml_id == xml_id,
             EnvioBitacora.cliente_id == cliente_id,
         )
         envio = self.sesion.scalar(sentencia)
 
         if envio is None:
             envio = EnvioBitacora(
-                archivo_bitacora_id=archivo_bitacora_id,
+                xml_id=xml_id,
                 cliente_id=cliente_id,
             )
             self.sesion.add(envio)

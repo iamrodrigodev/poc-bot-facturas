@@ -5,6 +5,7 @@ from app.jobs import (
     descargar_archivos,
     descargar_listado,
     descomprimir_archivos,
+    procesar_xml,
     enviar_xml_cliente,
 )
 from app.utils.logs import obtener_registrador
@@ -14,7 +15,8 @@ JOBS = {
     "01_descargar_listado": descargar_listado.ejecutar,
     "02_descargar_archivos": descargar_archivos.ejecutar,
     "03_descomprimir_archivos": descomprimir_archivos.ejecutar,
-    "04_enviar_xml_cliente": enviar_xml_cliente.ejecutar,
+    "04_procesar_xml": procesar_xml.ejecutar,
+    "05_enviar_xml_cliente": enviar_xml_cliente.ejecutar,
 }
 registrador = obtener_registrador("ejecutor")
 

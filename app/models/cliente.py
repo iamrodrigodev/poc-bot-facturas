@@ -12,4 +12,5 @@ class Cliente(Base):
     cliente_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     cliente_nombre: Mapped[str] = mapped_column(String(1000))
     cliente_email: Mapped[str] = mapped_column(String(1000))
+    cliente_rfc: Mapped[str] = mapped_column(String(13), nullable=True)
     cliente_activo: Mapped[bool] = mapped_column(Boolean, default=True)

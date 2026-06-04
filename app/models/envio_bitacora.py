@@ -18,9 +18,9 @@ class EnvioBitacora(Base):
     __tablename__ = "envio_bitacora"
     __table_args__ = (
         UniqueConstraint(
-            "archivo_bitacora_id",
+            "xml_id",
             "cliente_id",
-            name="uq_envio_bitacora_archivo_cliente",
+            name="uq_envio_bitacora_xml_cliente",
         ),
         CheckConstraint(
             "envio_bitacora_estado IN ('enviado')",
@@ -30,9 +30,9 @@ class EnvioBitacora(Base):
     )
 
     envio_bitacora_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    archivo_bitacora_id: Mapped[int] = mapped_column(
+    xml_id: Mapped[int] = mapped_column(
         ForeignKey(
-            f"{ajustes.sql_schema_operacion}.archivo_bitacora.archivo_bitacora_id",
+            f"{ajustes.sql_schema_operacion}.archivo_xml.xml_id",
         ),
     )
     cliente_id: Mapped[int] = mapped_column(
