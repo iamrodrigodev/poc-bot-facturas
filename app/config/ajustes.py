@@ -38,7 +38,6 @@ class Ajustes:
         "sql_trust_server_certificate",
         True,
     )
-    selenium_headless: bool = obtener_booleano("selenium_headless", False)
     descarga_tamanio_maximo_mb: int = int(getenv("descarga_tamanio_maximo_mb", "100"))
     zip_archivos_maximos: int = int(getenv("zip_archivos_maximos", "10000"))
     zip_tamanio_extraido_maximo_mb: int = int(
