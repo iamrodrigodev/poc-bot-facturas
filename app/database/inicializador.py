@@ -2,16 +2,10 @@ import re
 
 from sqlalchemy import text
 
+import app.models
 from app.config.ajustes import ajustes
 from app.database.base import Base
 from app.database.sesion import motor
-from app.models import (
-    archivo_bitacora,
-    archivo_tipo,
-    cliente,
-    envio_bitacora,
-    pagina_fuente,
-)
 
 
 def crear_esquema():
