@@ -1,6 +1,6 @@
 import argparse
 
-from app.database.inicializador import crear_tablas
+from app.database.bloqueos import bloquear_job
 from app.jobs import (
     descargar_archivos,
     descargar_listado,
@@ -23,7 +23,8 @@ def ejecutar_job(nombre):
     registrador.info("Inicio de job", extra={"job": nombre})
 
     try:
-        JOBS[nombre]()
+        with bloquear_job(nombre):
+            JOBS[nombre]()
         registrador.info("Fin de job", extra={"job": nombre, "resultado": "correcto"})
     except Exception:
         registrador.exception(
@@ -38,7 +39,6 @@ def ejecutar_jobs():
     analizador.add_argument("job", choices=[*JOBS.keys(), "todos"])
     argumentos = analizador.parse_args()
 
-    crear_tablas()
     registrador.info("Inicio de ejecución", extra={"job_solicitado": argumentos.job})
 
     if argumentos.job == "todos":

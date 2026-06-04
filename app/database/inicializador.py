@@ -5,7 +5,13 @@ from sqlalchemy import text
 from app.config.ajustes import ajustes
 from app.database.base import Base
 from app.database.sesion import motor
-from app.models import archivo_bitacora, archivo_tipo, cliente, pagina_fuente
+from app.models import (
+    archivo_bitacora,
+    archivo_tipo,
+    cliente,
+    envio_bitacora,
+    pagina_fuente,
+)
 
 
 def crear_esquema():
@@ -26,4 +32,8 @@ def crear_esquema():
 
 def crear_tablas():
     crear_esquema()
-    Base.metadata.create_all(bind=motor)
+
+    with motor.begin() as conexion:
+        conexion.execute(text("SET ANSI_NULLS ON"))
+        conexion.execute(text("SET QUOTED_IDENTIFIER ON"))
+        Base.metadata.create_all(bind=conexion)

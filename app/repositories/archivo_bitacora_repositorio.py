@@ -18,6 +18,12 @@ class ArchivoBitacoraRepositorio:
         self.sesion.flush()
         return bitacora
 
+    def obtener_por_id(self, archivo_bitacora_id):
+        return self.sesion.get(ArchivoBitacora, archivo_bitacora_id)
+
+    def obtener_por_id(self, archivo_bitacora_id):
+        return self.sesion.get(ArchivoBitacora, archivo_bitacora_id)
+
     def listar_descargados_sin_extraer(self):
         sentencia = (
             select(ArchivoBitacora)

@@ -1,6 +1,14 @@
 from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text
+from sqlalchemy import (
+    Boolean,
+    CheckConstraint,
+    DateTime,
+    ForeignKey,
+    Index,
+    String,
+    Text,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.config.ajustes import ajustes
@@ -9,7 +17,31 @@ from app.database.base import Base
 
 class ArchivoBitacora(Base):
     __tablename__ = "archivo_bitacora"
-    __table_args__ = {"schema": ajustes.sql_schema_operacion}
+    __table_args__ = (
+        CheckConstraint(
+            "archivo_bitacora_descarga_ok = 0 OR "
+            "(archivo_bitacora_nombre_fisico IS NOT NULL AND "
+            "archivo_bitacora_ruta_descarga IS NOT NULL)",
+            name="ck_archivo_bitacora_descarga_consistente",
+        ),
+        CheckConstraint(
+            "archivo_bitacora_descompresion_ok = 0 OR "
+            "(archivo_bitacora_descarga_ok = 1 AND "
+            "archivo_bitacora_ruta_extraccion IS NOT NULL)",
+            name="ck_archivo_bitacora_descompresion_consistente",
+        ),
+        CheckConstraint(
+            "archivo_bitacora_envio_ok = 0 OR archivo_bitacora_descompresion_ok = 1",
+            name="ck_archivo_bitacora_envio_consistente",
+        ),
+        Index(
+            "uq_archivo_bitacora_descarga_exitosa",
+            "archivo_tipo_id",
+            unique=True,
+            mssql_where="archivo_bitacora_descarga_ok = 1",
+        ),
+        {"schema": ajustes.sql_schema_operacion},
+    )
 
     archivo_bitacora_id: Mapped[int] = mapped_column(
         primary_key=True,

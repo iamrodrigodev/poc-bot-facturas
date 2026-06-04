@@ -1,6 +1,7 @@
-from sqlalchemy import select
+from sqlalchemy import exists, select
 from sqlalchemy.orm import Session, selectinload
 
+from app.models.archivo_bitacora import ArchivoBitacora
 from app.models.archivo_tipo import ArchivoTipo
 
 
@@ -29,6 +30,12 @@ class ArchivoTipoRepositorio:
         sentencia = (
             select(ArchivoTipo)
             .options(selectinload(ArchivoTipo.pagina_fuente))
-            .where(ArchivoTipo.archivo_tipo_requerido == True)
+            .where(
+                ArchivoTipo.archivo_tipo_requerido == True,
+                ~exists().where(
+                    ArchivoBitacora.archivo_tipo_id == ArchivoTipo.archivo_tipo_id,
+                    ArchivoBitacora.archivo_bitacora_descarga_ok == True,
+                ),
+            )
         )
         return list(self.sesion.scalars(sentencia))

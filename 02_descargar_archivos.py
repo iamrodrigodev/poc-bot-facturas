@@ -1,7 +1,5 @@
-from app.database.inicializador import crear_tablas
-from app.jobs.descargar_archivos import ejecutar
+from app.jobs.ejecutor import ejecutar_job
 
 
 if __name__ == "__main__":
-    crear_tablas()
-    ejecutar()
+    ejecutar_job("02_descargar_archivos")
