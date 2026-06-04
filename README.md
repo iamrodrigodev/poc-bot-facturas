@@ -7,7 +7,7 @@ La persistencia utiliza SQL Server mediante SQLAlchemy ORM. Las tablas, columnas
 ## Arquitectura
 
 ```text
-poc-bot-facturas-sqlserver/
+poc-bot-facturas/
 ├── main.py
 ├── 01_descargar_listado.py
 ├── 02_descargar_archivos.py
