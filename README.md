@@ -96,8 +96,8 @@ sql_server=localhost,1433
 sql_database=poc_bot_facturas
 sql_schema_configuracion=configuracion
 sql_schema_operacion=operacion
-sql_username=sa
-sql_password=SqlServer2026*
+sql_username=bot_facturas_app
+sql_password=Cambiar_Esta_Clave_2026!
 sql_driver=SQL Server
 sql_trusted_connection=false
 sql_trust_server_certificate=true
@@ -128,6 +128,15 @@ Crear las tablas ORM:
 ```powershell
 python -m scripts.crear_tablas
 ```
+
+Aplicar restricciones de integridad y crear el usuario de ejecución:
+
+```text
+scripts/endurecer_integridad.sql
+scripts/crear_usuario_aplicacion.sql
+```
+
+La creación inicial debe ejecutarse con una cuenta administrativa. Los jobs deben utilizar `bot_facturas_app`, que solo posee permisos de lectura y escritura sobre los esquemas.
 
 Cargar la página de prueba:
 
@@ -192,8 +201,28 @@ python main.py todos
 ## Consideraciones
 
 - Las credenciales se almacenan en `.env` y no se versionan.
+- Los jobs no crean ni modifican la estructura de la base de datos.
+- Cada operación SQL confirma o revierte sus cambios mediante una unidad de trabajo.
+- SQL Server impide ejecutar simultáneamente dos instancias del mismo job.
 - Selenium se utiliza para páginas que requieren navegación mediante navegador.
 - Requests se utiliza para descargar archivos mediante URL directa.
 - `zipfile` se utiliza para extracción segura.
 - SQLAlchemy centraliza la persistencia y evita SQL embebido en los jobs.
 - El envío SMTP debe reemplazarse por Microsoft Graph en una versión productiva.
+
+## Seguridad y recuperación
+
+La auditoría técnica, controles implementados y riesgos residuales están documentados en `AUDITORIA_SEGURIDAD.md`.
+
+Ejecutar las pruebas de integración:
+
+```powershell
+python -m unittest tests.test_seguridad_integracion -v
+```
+
+Generar un respaldo fuera del contenedor:
+
+```powershell
+$env:SQLSERVER_SA_PASSWORD="clave_administrativa"
+.\scripts\respaldar_base_datos.ps1
+```
