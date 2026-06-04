@@ -57,40 +57,42 @@ def descargar_archivo(url, carpeta_destino, nombre_archivo):
         if tamanio_declarado > tamanio_maximo:
             raise ValueError("El archivo supera el tamaño máximo permitido")
 
-        with NamedTemporaryFile(
+        archivo_temporal = NamedTemporaryFile(
             dir=carpeta_destino,
             prefix=f".{nombre_archivo}.",
             suffix=".parcial",
             delete=False,
-        ) as archivo_temporal:
-            ruta_temporal = Path(archivo_temporal.name)
-            tamanio_descargado = 0
+        )
+        ruta_temporal = Path(archivo_temporal.name)
+        tamanio_descargado = 0
 
-            try:
-                for bloque in respuesta.iter_content(chunk_size=1024 * 1024):
-                    if not bloque:
-                        continue
+        try:
+            for bloque in respuesta.iter_content(chunk_size=1024 * 1024):
+                if not bloque:
+                    continue
 
-                    tamanio_descargado += len(bloque)
+                tamanio_descargado += len(bloque)
 
-                    if tamanio_descargado > tamanio_maximo:
-                        raise ValueError(
-                            "El archivo supera el tamaño máximo permitido",
-                        )
+                if tamanio_descargado > tamanio_maximo:
+                    raise ValueError(
+                        "El archivo supera el tamaño máximo permitido",
+                    )
 
-                    archivo_temporal.write(bloque)
+                archivo_temporal.write(bloque)
 
-                archivo_temporal.flush()
-                os.fsync(archivo_temporal.fileno())
+            archivo_temporal.flush()
+            os.fsync(archivo_temporal.fileno())
+            archivo_temporal.close()
 
-                if not is_zipfile(ruta_temporal):
-                    raise ValueError("El archivo descargado no es un ZIP válido")
+            if not is_zipfile(ruta_temporal):
+                raise ValueError("El archivo descargado no es un ZIP válido")
 
-                ruta_temporal.replace(ruta_archivo)
-                return ruta_archivo
-            except Exception:
-                ruta_temporal.unlink(missing_ok=True)
-                raise
+            ruta_temporal.replace(ruta_archivo)
+            return ruta_archivo
+        except Exception:
+            archivo_temporal.close()
+            ruta_temporal.unlink(missing_ok=True)
+            raise
     finally:
         respuesta.close()
         sesion.close()
