@@ -4,9 +4,9 @@ from sqlalchemy import (
     CheckConstraint,
     DateTime,
     ForeignKey,
+    Index,
     String,
     Text,
-    UniqueConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -17,13 +17,15 @@ from app.database.base import Base
 class EnvioBitacora(Base):
     __tablename__ = "envio_bitacora"
     __table_args__ = (
-        UniqueConstraint(
+        Index(
+            "uq_envio_bitacora_xml_cliente_enviado",
             "xml_id",
             "cliente_id",
-            name="uq_envio_bitacora_xml_cliente",
+            unique=True,
+            mssql_where="envio_bitacora_estado = 'enviado'",
         ),
         CheckConstraint(
-            "envio_bitacora_estado IN ('enviado')",
+            "envio_bitacora_estado IN ('enviado', 'error')",
             name="ck_envio_bitacora_estado",
         ),
         {"schema": ajustes.sql_schema_operacion},

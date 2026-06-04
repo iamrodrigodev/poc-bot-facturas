@@ -34,9 +34,11 @@ def preparar_xmls(rutas_xml):
 def crear_contenido_texto(nombre_cliente, adjuntos):
     return (
         "Aviso: Correo Electrónico Externo\n"
-        "Verifica la dirección del remitente antes de acceder a enlaces o abrir archivos adjuntos. Si tienes dudas, notifica a Seguridad de la Información\n\n"
+        "Verifica la dirección del remitente antes de acceder a enlaces o "
+        "abrir archivos adjuntos. Si tienes dudas, notifica a Seguridad "
+        "de la Información.\n\n"
         f"Hola {nombre_cliente},\n\n"
-        "Se adjuntan los archivos XML procesados por el bot de prueba.\n\n"
+        "Se adjuntan los comprobantes XML asignados a su RUC.\n\n"
         f"Cantidad de XML adjuntos: {len(adjuntos)}\n\n"
         "Saludos,\n"
         "Bot de Facturas"
@@ -44,13 +46,17 @@ def crear_contenido_texto(nombre_cliente, adjuntos):
 
 
 def crear_contenido_html(nombre_cliente, adjuntos):
+    filas = "".join(f"<li>{html.escape(nombre)}</li>" for _, nombre in adjuntos)
     return (
         "<html><body>"
         "<p><strong>[Aviso: Correo Electrónico Externo]</strong><br>"
-        "Verifica la dirección del remitente antes de acceder a enlaces o abrir archivos adjuntos. Si tienes dudas, notifica a Seguridad de la Información</p>"
+        "Verifica la dirección del remitente antes de acceder a enlaces o "
+        "abrir archivos adjuntos. Si tienes dudas, notifica a Seguridad "
+        "de la Información.</p>"
         f"<p>Hola {html.escape(nombre_cliente)},</p>"
-        "<p>Se adjuntan los archivos XML procesados por el bot de prueba.</p>"
-        f"<p>Cantidad de XML adjuntos: {len(adjuntos)}</p>"
+        "<p>Se adjuntan los comprobantes XML asignados a su RUC.</p>"
+        f"<p><strong>XML adjuntos:</strong> {len(adjuntos)}</p>"
+        f"<ul>{filas}</ul>"
         "<p>Saludos,<br>Bot de Facturas</p>"
         "</body></html>"
     )

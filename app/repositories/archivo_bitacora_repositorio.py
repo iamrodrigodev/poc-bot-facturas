@@ -48,3 +48,9 @@ class ArchivoBitacoraRepositorio:
             )
         )
         return list(self.sesion.scalars(sentencia))
+
+    def listar_extraidos(self):
+        sentencia = select(ArchivoBitacora).where(
+            ArchivoBitacora.archivo_bitacora_descompresion_ok == True,
+        )
+        return list(self.sesion.scalars(sentencia))

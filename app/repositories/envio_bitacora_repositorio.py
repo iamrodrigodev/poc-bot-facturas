@@ -15,20 +15,19 @@ class EnvioBitacoraRepositorio:
         )
         return set(self.sesion.scalars(sentencia))
 
-    def registrar_envio(self, xml_id, cliente_id):
-        sentencia = select(EnvioBitacora).where(
-            EnvioBitacora.xml_id == xml_id,
-            EnvioBitacora.cliente_id == cliente_id,
+    def listar_todos_ids_enviados(self):
+        sentencia = select(EnvioBitacora.xml_id).where(
+            EnvioBitacora.envio_bitacora_estado == "enviado",
         )
-        envio = self.sesion.scalar(sentencia)
+        return set(self.sesion.scalars(sentencia))
 
-        if envio is None:
-            envio = EnvioBitacora(
-                xml_id=xml_id,
-                cliente_id=cliente_id,
-            )
-            self.sesion.add(envio)
-
-        envio.envio_bitacora_estado = "enviado"
-        envio.envio_bitacora_detalle = "Correo aceptado por el servidor SMTP"
+    def registrar_resultado(self, xml_id, cliente_id, estado, detalle):
+        envio = EnvioBitacora(
+            xml_id=xml_id,
+            cliente_id=cliente_id,
+            envio_bitacora_estado=estado,
+            envio_bitacora_detalle=detalle,
+        )
+        self.sesion.add(envio)
+        self.sesion.flush()
         return envio
