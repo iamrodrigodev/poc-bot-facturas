@@ -18,7 +18,7 @@ def extraer_datos_xml(ruta_xml):
         rfc_receptor = None
         uuid = None
         
-        # Buscar Emisor, Receptor y TimbreFiscalDigital ignorando namespaces
+        
         for elemento in raiz.iter():
             tag = elemento.tag.split("}")[-1] if "}" in elemento.tag else elemento.tag
             
@@ -51,14 +51,14 @@ def ejecutar():
             for ruta_xml in ruta_extraccion.rglob("*.xml"):
                 ruta_fisica = str(ruta_xml)
                 
-                # Verificar si ya existe
+                
                 existente = repositorio_xml.obtener_por_ruta(ruta_fisica)
                 if existente:
                     continue
                     
                 uuid, rfc_emisor, rfc_receptor = extraer_datos_xml(ruta_xml)
                 
-                # Si no tiene RFC de receptor, no es un CFDI válido o está corrupto, pero lo registramos igual
+                
                 repositorio_xml.crear(
                     archivo_bitacora_id=bitacora.archivo_bitacora_id,
                     xml_uuid=uuid,

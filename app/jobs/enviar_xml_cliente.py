@@ -21,7 +21,7 @@ def ejecutar():
         registrador.warning("No existen clientes activos para enviar los XML")
         return
 
-    # Usaremos el set de bitacoras id completadas para actualizar al final
+    
     ids_completos = {bitacora.archivo_bitacora_id for bitacora in bitacoras}
 
     for cliente in clientes:
@@ -64,11 +64,11 @@ def ejecutar():
             )
         except Exception as e:
             registrador.error(f"Error enviando XMLs al cliente {cliente.cliente_id}: {e}")
-            # Si falla el envío de un cliente, no marcar las bitacoras como completas
+            
             for xml in xmls_pendientes:
                 ids_completos.discard(xml.archivo_bitacora_id)
 
-    # Actualizamos el estado de archivo_bitacora
+    
     with unidad_trabajo() as sesion:
         repositorio_bitacora = ArchivoBitacoraRepositorio(sesion)
         for archivo_bitacora_id in ids_completos:
