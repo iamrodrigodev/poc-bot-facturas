@@ -15,6 +15,8 @@ motor = create_engine(
 def configurar_conexion(conexion_dbapi, registro_conexion):
     cursor = conexion_dbapi.cursor()
     cursor.execute("SET XACT_ABORT ON")
+    cursor.execute("SET ANSI_NULLS ON")
+    cursor.execute("SET QUOTED_IDENTIFIER ON")
     cursor.close()
 
 crear_sesion = sessionmaker(

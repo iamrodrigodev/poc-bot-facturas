@@ -31,7 +31,11 @@ class ZipLinkParser(HTMLParser):
     def handle_endtag(self, tag):
         if tag == "a" and self.in_a:
             nombre_texto = self.current_text.strip()
-            if not nombre_texto or len(nombre_texto) < 5 or not any(c.isalpha() for c in nombre_texto):
+            if (
+                not nombre_texto
+                or len(nombre_texto) < 5
+                or not any(caracter.isalpha() for caracter in nombre_texto)
+            ):
                 nombre = Path(self.current_href.split("?")[0]).name
             else:
                 nombre = nombre_texto
@@ -46,15 +50,18 @@ class ZipLinkParser(HTMLParser):
 
 def obtener_archivos_zip(url):
     validar_url_publica(url)
-    
-    respuesta = requests.get(url, timeout=30)
-    respuesta.encoding = "utf-8"
-    respuesta.raise_for_status()
-    
-    parser = ZipLinkParser(base_url=url)
-    parser.feed(respuesta.text)
-    
+
+    with requests.get(
+        url,
+        timeout=(10, 30),
+        allow_redirects=False,
+    ) as respuesta:
+        respuesta.raise_for_status()
+        respuesta.encoding = "utf-8"
+        parser = ZipLinkParser(base_url=url)
+        parser.feed(respuesta.text)
+
     for archivo in parser.archivos:
         validar_url_publica(archivo["url"])
-        
+
     return parser.archivos

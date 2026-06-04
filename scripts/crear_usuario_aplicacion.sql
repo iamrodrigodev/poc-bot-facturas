@@ -7,7 +7,7 @@ IF NOT EXISTS (
     WHERE name = 'bot_facturas_app'
 )
 CREATE LOGIN bot_facturas_app
-WITH PASSWORD = 'Cambiar_Esta_Clave_2026!';
+WITH PASSWORD = '$(BOT_FACTURAS_PASSWORD)';
 GO
 
 USE poc_bot_facturas;

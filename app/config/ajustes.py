@@ -55,7 +55,7 @@ class Ajustes:
 
     def crear_url_sqlalchemy(self):
         parametros = [
-            f"DRIVER={ {self.sql_driver}} ",
+            f"DRIVER={{{self.sql_driver}}}",
             f"SERVER={self.sql_server}",
             f"DATABASE={self.sql_database}",
             "TrustServerCertificate="

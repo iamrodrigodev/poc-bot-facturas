@@ -67,5 +67,5 @@ IF NOT EXISTS (
 )
 ALTER TABLE operacion.envio_bitacora
 ADD CONSTRAINT ck_envio_bitacora_estado
-CHECK (envio_bitacora_estado IN ('enviado'));
+CHECK (envio_bitacora_estado IN ('enviado', 'error'));
 GO
