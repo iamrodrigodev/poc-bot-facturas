@@ -30,6 +30,8 @@ class Ajustes:
     sql_schema_operacion: str = getenv("sql_schema_operacion", "operacion")
     sql_username: str = getenv("sql_username", "")
     sql_password: str = getenv("sql_password", "")
+    sql_admin_username: str = getenv("sql_admin_username", "")
+    sql_admin_password: str = getenv("sql_admin_password", "")
     sql_driver: str = getenv("sql_driver", "SQL Server")
     sql_trusted_connection: bool = obtener_booleano("sql_trusted_connection", True)
     sql_trust_server_certificate: bool = obtener_booleano(

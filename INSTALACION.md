@@ -23,7 +23,18 @@ pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
-Completar el archivo `.env` con las credenciales locales de SQL Server y, si se probará el envío de correos, las credenciales SMTP.
+Completar el archivo `.env` con:
+
+- Las credenciales administrativas de SQL Server utilizadas únicamente durante la inicialización.
+- Las credenciales limitadas que utilizará normalmente la aplicación.
+- Las credenciales SMTP, si se probará el envío de correos.
+
+```env
+sql_admin_username=sa
+sql_admin_password=ContraseñaSegura123!
+sql_username=bot_facturas_app
+sql_password=ContraseñaAplicacion123!
+```
 
 ## 3. Levantar SQL Server
 
@@ -42,63 +53,25 @@ La contraseña debe cumplir los requisitos de seguridad de SQL Server.
 
 Para una instalación nueva no debe ejecutarse ninguna migración.
 
-Ejecutar los siguientes pasos en orden:
-
-### 4.1 Crear la base de datos y los esquemas
-
-Ejecutar como administrador:
-
-```text
-scripts/crear_base_datos.sql
-```
-
-### 4.2 Crear las tablas
-
-Configurar temporalmente `.env` con el usuario administrador:
-
-```env
-sql_username=sa
-sql_password=ContraseñaSegura123!
-```
-
-Ejecutar:
+Ejecutar el inicializador único:
 
 ```powershell
-python scripts/crear_tablas.py
+python scripts/inicializar_base_datos.py
 ```
 
-### 4.3 Aplicar restricciones de integridad
+El inicializador realiza de forma idempotente:
 
-Ejecutar:
+- Creación de la base de datos.
+- Creación de los esquemas `configuracion` y `operacion`.
+- Creación de las tablas ORM actualizadas.
+- Aplicación de restricciones e índices de integridad.
+- Carga de la página fuente inicial.
+- Creación del usuario limitado de la aplicación.
+- Asignación de permisos mínimos al usuario de la aplicación.
 
-```text
-scripts/endurecer_integridad.sql
-```
+Puede ejecutarse nuevamente sin duplicar los datos ni recrear objetos existentes.
 
-### 4.4 Cargar los datos iniciales
-
-Ejecutar:
-
-```text
-scripts/cargar_datos_iniciales.sql
-```
-
-### 4.5 Crear el usuario de la aplicación
-
-Ejecutar:
-
-```text
-scripts/crear_usuario_aplicacion.sql
-```
-
-El valor `$(BOT_FACTURAS_PASSWORD)` debe proporcionarse mediante SQLCMD o reemplazarse por una contraseña segura durante la ejecución local.
-
-Después de crear el usuario, actualizar `.env`:
-
-```env
-sql_username=bot_facturas_app
-sql_password=contraseña_del_usuario
-```
+Los archivos SQL individuales se mantienen para auditoría, mantenimiento manual y diagnóstico, pero no son necesarios durante una instalación nueva.
 
 ## 5. Migraciones
 
@@ -195,4 +168,3 @@ logs/
 storage/downloads/
 storage/extracted/
 ```
-
