@@ -29,6 +29,6 @@ class ArchivoTipoRepositorio:
         sentencia = (
             select(ArchivoTipo)
             .options(selectinload(ArchivoTipo.pagina_fuente))
-            .where(ArchivoTipo.archivo_tipo_requerido.is_(True))
+            .where(ArchivoTipo.archivo_tipo_requerido == True)
         )
         return list(self.sesion.scalars(sentencia))

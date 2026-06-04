@@ -3,18 +3,20 @@ from datetime import datetime
 from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.config.ajustes import ajustes
 from app.database.base import Base
 
 
 class ArchivoBitacora(Base):
     __tablename__ = "archivo_bitacora"
+    __table_args__ = {"schema": ajustes.sql_schema_operacion}
 
     archivo_bitacora_id: Mapped[int] = mapped_column(
         primary_key=True,
         autoincrement=True,
     )
     archivo_tipo_id: Mapped[int] = mapped_column(
-        ForeignKey("archivo_tipo.archivo_tipo_id"),
+        ForeignKey(f"{ajustes.sql_schema_operacion}.archivo_tipo.archivo_tipo_id"),
     )
     archivo_bitacora_fecha_hora: Mapped[datetime] = mapped_column(
         DateTime,

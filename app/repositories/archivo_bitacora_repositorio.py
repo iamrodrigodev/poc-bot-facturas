@@ -27,8 +27,8 @@ class ArchivoBitacoraRepositorio:
                 ),
             )
             .where(
-                ArchivoBitacora.archivo_bitacora_descarga_ok.is_(True),
-                ArchivoBitacora.archivo_bitacora_descompresion_ok.is_(False),
+                ArchivoBitacora.archivo_bitacora_descarga_ok == True,
+                ArchivoBitacora.archivo_bitacora_descompresion_ok == False,
             )
         )
         return list(self.sesion.scalars(sentencia))
@@ -38,8 +38,8 @@ class ArchivoBitacoraRepositorio:
             select(ArchivoBitacora)
             .options(selectinload(ArchivoBitacora.archivo_tipo))
             .where(
-                ArchivoBitacora.archivo_bitacora_descompresion_ok.is_(True),
-                ArchivoBitacora.archivo_bitacora_envio_ok.is_(False),
+                ArchivoBitacora.archivo_bitacora_descompresion_ok == True,
+                ArchivoBitacora.archivo_bitacora_envio_ok == False,
             )
         )
         return list(self.sesion.scalars(sentencia))

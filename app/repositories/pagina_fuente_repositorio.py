@@ -10,7 +10,7 @@ class PaginaFuenteRepositorio:
 
     def listar_activas(self):
         sentencia = select(PaginaFuente).where(
-            PaginaFuente.pagina_fuente_activa.is_(True),
+            PaginaFuente.pagina_fuente_activa == True,
         )
         return list(self.sesion.scalars(sentencia))
 

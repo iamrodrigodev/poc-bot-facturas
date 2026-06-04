@@ -7,6 +7,7 @@ from app.config.ajustes import ajustes
 motor = create_engine(
     ajustes.crear_url_sqlalchemy(),
     pool_pre_ping=True,
+    use_setinputsizes=False,
 )
 
 crear_sesion = sessionmaker(

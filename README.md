@@ -94,6 +94,8 @@ Ejemplo para el contenedor Docker:
 ```env
 sql_server=localhost,1433
 sql_database=poc_bot_facturas
+sql_schema_configuracion=configuracion
+sql_schema_operacion=operacion
 sql_username=sa
 sql_password=SqlServer2026*
 sql_driver=SQL Server
@@ -102,6 +104,18 @@ sql_trust_server_certificate=true
 ```
 
 Crear la base de datos ejecutando `scripts/crear_base_datos.sql` en SQL Server.
+
+Las tablas se separan por responsabilidad en dos esquemas:
+
+```text
+poc_bot_facturas
+├── configuracion
+│   ├── pagina_fuente
+│   └── cliente
+└── operacion
+    ├── archivo_tipo
+    └── archivo_bitacora
+```
 
 El valor de `sql_driver` debe coincidir con un controlador instalado. Se puede consultar con:
 
@@ -112,7 +126,7 @@ El valor de `sql_driver` debe coincidir con un controlador instalado. Se puede c
 Crear las tablas ORM:
 
 ```powershell
-python scripts/crear_tablas.py
+python -m scripts.crear_tablas
 ```
 
 Cargar la página de prueba:
@@ -136,7 +150,7 @@ Usa Selenium para recorrer las páginas activas y registrar ZIPs nuevos en `arch
 Antes de descargar, marcar los archivos requeridos:
 
 ```sql
-UPDATE archivo_tipo
+UPDATE operacion.archivo_tipo
 SET archivo_tipo_requerido = 1
 WHERE archivo_tipo_id IN (1, 2, 3);
 ```

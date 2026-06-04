@@ -23,6 +23,11 @@ def obtener_booleano(nombre, valor_predeterminado=False):
 class Ajustes:
     sql_server: str = getenv("sql_server", "localhost\\SQLEXPRESS")
     sql_database: str = getenv("sql_database", "poc_bot_facturas")
+    sql_schema_configuracion: str = getenv(
+        "sql_schema_configuracion",
+        "configuracion",
+    )
+    sql_schema_operacion: str = getenv("sql_schema_operacion", "operacion")
     sql_username: str = getenv("sql_username", "")
     sql_password: str = getenv("sql_password", "")
     sql_driver: str = getenv("sql_driver", "SQL Server")
