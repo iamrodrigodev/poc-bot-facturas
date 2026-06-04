@@ -38,13 +38,15 @@ class Ajustes:
     smtp_password: str = getenv("smtp_password", "")
     carpeta_downloads: Path = CARPETA_BASE / "storage" / "downloads"
     carpeta_extracted: Path = CARPETA_BASE / "storage" / "extracted"
+    carpeta_logs: Path = CARPETA_BASE / "logs"
 
     def crear_url_sqlalchemy(self):
         parametros = [
             f"DRIVER={{{self.sql_driver}}}",
             f"SERVER={self.sql_server}",
             f"DATABASE={self.sql_database}",
-            f"TrustServerCertificate={'yes' if self.sql_trust_server_certificate else 'no'}",
+            "TrustServerCertificate="
+            f"{'yes' if self.sql_trust_server_certificate else 'no'}",
         ]
 
         if self.sql_trusted_connection:

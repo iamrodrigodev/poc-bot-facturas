@@ -6,5 +6,5 @@ storage/downloads/*
 !storage/downloads/.gitkeep
 storage/extracted/*
 !storage/extracted/.gitkeep
-storage/logs/*
-!storage/logs/.gitkeep
+logs/*
+!logs/.gitkeep

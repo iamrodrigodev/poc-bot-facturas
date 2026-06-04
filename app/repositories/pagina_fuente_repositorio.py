@@ -9,7 +9,9 @@ class PaginaFuenteRepositorio:
         self.sesion = sesion
 
     def listar_activas(self):
-        sentencia = select(PaginaFuente).where(PaginaFuente.pagina_fuente_activa.is_(True))
+        sentencia = select(PaginaFuente).where(
+            PaginaFuente.pagina_fuente_activa.is_(True),
+        )
         return list(self.sesion.scalars(sentencia))
 
     def obtener_por_url(self, url):

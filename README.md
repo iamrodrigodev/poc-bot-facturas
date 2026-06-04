@@ -22,10 +22,10 @@ poc-bot-facturas/
 │   ├── jobs/
 │   └── utils/
 ├── scripts/
+├── logs/
 └── storage/
     ├── downloads/
-    ├── extracted/
-    └── logs/
+    └── extracted/
 ```
 
 ## Capas
@@ -38,6 +38,22 @@ poc-bot-facturas/
 | `jobs` | Casos de uso ejecutables de forma independiente. |
 | `database` | Motor, sesiones y creación de tablas. |
 | `config` | Variables de entorno y rutas locales. |
+
+## Logs
+
+Cada ejecución muestra mensajes legibles en consola y almacena eventos estructurados en:
+
+```text
+logs/bot_facturas.jsonl
+```
+
+Cada línea es un objeto JSON independiente con fecha, nivel, identificador de ejecución, módulo, mensaje y contexto:
+
+```json
+{"fecha_hora":"2026-06-04T10:30:00-05:00","nivel":"INFO","ejecucion_id":"...","modulo":"job.descargar_archivos","mensaje":"Archivo descargado","contexto":{"archivo_tipo_id":1,"ruta_descarga":"..."}}
+```
+
+El archivo rota automáticamente al alcanzar aproximadamente 5 MB y conserva hasta cinco respaldos.
 
 ## Modelo de datos
 

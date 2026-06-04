@@ -7,6 +7,7 @@ from app.jobs import (
     descomprimir_archivos,
     enviar_xml_cliente,
 )
+from app.utils.logs import obtener_registrador
 
 
 JOBS = {
@@ -15,6 +16,21 @@ JOBS = {
     "03_descomprimir_archivos": descomprimir_archivos.ejecutar,
     "04_enviar_xml_cliente": enviar_xml_cliente.ejecutar,
 }
+registrador = obtener_registrador("ejecutor")
+
+
+def ejecutar_job(nombre):
+    registrador.info("Inicio de job", extra={"job": nombre})
+
+    try:
+        JOBS[nombre]()
+        registrador.info("Fin de job", extra={"job": nombre, "resultado": "correcto"})
+    except Exception:
+        registrador.exception(
+            "Error durante la ejecución del job",
+            extra={"job": nombre, "resultado": "error"},
+        )
+        raise
 
 
 def ejecutar_jobs():
@@ -23,11 +39,13 @@ def ejecutar_jobs():
     argumentos = analizador.parse_args()
 
     crear_tablas()
+    registrador.info("Inicio de ejecución", extra={"job_solicitado": argumentos.job})
 
     if argumentos.job == "todos":
-        for nombre, ejecutar in JOBS.items():
-            print(f"\n{'=' * 70}\n{nombre}\n{'=' * 70}")
-            ejecutar()
+        for nombre in JOBS:
+            ejecutar_job(nombre)
+        registrador.info("Fin de ejecución", extra={"job_solicitado": argumentos.job})
         return
 
-    JOBS[argumentos.job]()
+    ejecutar_job(argumentos.job)
+    registrador.info("Fin de ejecución", extra={"job_solicitado": argumentos.job})
